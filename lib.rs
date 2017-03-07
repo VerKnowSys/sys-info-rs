@@ -76,7 +76,7 @@ pub fn os_type() -> Result<String, Error> {
         let _ = f.read_to_string(&mut s).unwrap();
         s.pop();  // pop '\n'
         Ok(s)
-    } else if cfg!(target_os = "macos") || cfg!(target_os = "windows") {
+    } else if cfg!(target_os = "macos") || cfg!(target_os = "freebsd") || cfg!(target_os = "windows") {
         unsafe {
             Ok(String::from_utf8_lossy(ffi::CStr::from_ptr(get_os_type()).to_bytes()).into_owned())
         }
@@ -95,7 +95,7 @@ pub fn os_release() -> Result<String, Error> {
         let _ = f.read_to_string(&mut s).unwrap();
         s.pop();
         Ok(s)
-    } else if cfg!(target_os = "macos") || cfg!(target_os = "windows") {
+    } else if cfg!(target_os = "macos") || cfg!(target_os = "freebsd") || cfg!(target_os = "windows") {
         unsafe {
             Ok(String::from_utf8_lossy(ffi::CStr::from_ptr(get_os_release()).to_bytes())
                    .into_owned())
@@ -133,7 +133,7 @@ pub fn cpu_speed() -> Result<u64, Error> {
         words.next();
         let s = words.next().unwrap().trim().trim_right_matches('\n');
         Ok(s.parse::<f64>().unwrap() as u64)
-    } else if cfg!(target_os = "macos") || cfg!(target_os = "windows") {
+    } else if cfg!(target_os = "macos") || cfg!(target_os = "freebsd") || cfg!(target_os = "windows") {
         unsafe { Ok(get_cpu_speed()) }
     } else {
         Err(Error::UnsupportedSystem)
@@ -157,7 +157,7 @@ pub fn loadavg() -> Result<LoadAvg, Error> {
             five: five,
             fifteen: fifteen,
         })
-    } else if cfg!(target_os = "macos") || cfg!(target_os = "windows") {
+    } else if cfg!(target_os = "macos") || cfg!(target_os = "freebsd") || cfg!(target_os = "windows") {
         Ok(unsafe { get_loadavg() })
     } else {
         Err(Error::UnsupportedSystem)
@@ -182,7 +182,7 @@ pub fn proc_total() -> Result<u64, Error> {
             let mut words = words.next().unwrap().split(' ');
             words.next().unwrap().parse::<u64>().unwrap()
         })
-    } else if cfg!(target_os = "macos") || cfg!(target_os = "windows") {
+    } else if cfg!(target_os = "macos") || cfg!(target_os = "freebsd") || cfg!(target_os = "windows") {
         Ok(unsafe { get_proc_total() })
     } else {
         Err(Error::UnsupportedSystem)
@@ -234,7 +234,7 @@ pub fn mem_info() -> Result<MemInfo, Error> {
             swap_total: swap_total,
             swap_free: swap_free,
         })
-    } else if cfg!(target_os = "macos") || cfg!(target_os = "windows") {
+    } else if cfg!(target_os = "macos") || cfg!(target_os = "freebsd") || cfg!(target_os = "windows") {
         Ok(unsafe { get_mem_info() })
     } else {
         Err(Error::UnsupportedSystem)
@@ -245,7 +245,7 @@ pub fn mem_info() -> Result<MemInfo, Error> {
 ///
 /// Notice, it just calculate current disk on Windows.
 pub fn disk_info() -> Result<DiskInfo, Error> {
-    if cfg!(target_os = "linux") || cfg!(target_os = "macos") || cfg!(target_os = "windows") {
+    if cfg!(target_os = "linux") || cfg!(target_os = "macos") || cfg!(target_os = "freebsd") || cfg!(target_os = "windows") {
         Ok(unsafe { get_disk_info() })
     } else {
         Err(Error::UnsupportedSystem)

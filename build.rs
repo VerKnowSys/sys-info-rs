@@ -1,7 +1,9 @@
 extern crate gcc;
 
 fn main() {
-    if cfg!(target_os = "linux") {
+    if cfg!(target_os = "freebsd") {
+        gcc::compile_library("libinfo.a", &["c/freebsd.c"]);
+    } else if cfg!(target_os = "linux") {
         gcc::compile_library("libinfo.a", &["c/linux.c"]);
     } else if cfg!(target_os = "macos") {
         gcc::compile_library("libinfo.a", &["c/macos.c"]);
