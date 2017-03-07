@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <sys/statvfs.h>
+#include <sys/sysctl.h>
 
 #include "info.h"
 
